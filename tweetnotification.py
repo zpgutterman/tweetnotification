@@ -30,12 +30,12 @@ except ImportError:
 pidfile = "/tmp/tweets.pid"
 # The consumer keys can be found on your application's Details page located at
 #  https://dev.twitter.com/apps (under "OAuth settings")
-consumer_key="w9OIdxjf2ouoYypchOhdCOPjC"
-consumer_secret="6gWyVDGY310vgupjE8jMVntRY1TG2Jyk6touP0a7uT8pANOqPz"
+consumer_key=""
+consumer_secret=""
 # The access tokens can be found on your applications's Details page located at
 # https://dev.twitter.com/apps (located under "Your access token")
-access_token="107847765-1fCRztdH0Nwms4XPPetTaHrlHoZdbxo4pclR8pvh"
-access_token_secret="sza0GpkGtcp0btgzQ8bMuC7VLif1RVLKFsHR6qNr3TfYX"
+access_token=""
+access_token_secret=""
 
 # TWITTER ACCOUNTS TO CHECK
 theUserName = ['realDonaldTrump',
