@@ -30,12 +30,12 @@ except ImportError:
 pidfile = "/tmp/tweets.pid"
 # The consumer keys can be found on your application's Details page located at
 #  https://dev.twitter.com/apps (under "OAuth settings")
-consumer_key=""
-consumer_secret=""
+consumer_key="change"
+consumer_secret="change"
 # The access tokens can be found on your applications's Details page located at
 # https://dev.twitter.com/apps (located under "Your access token")
-access_token=""
-access_token_secret=""
+access_token="change"
+access_token_secret="change"
 
 # TWITTER ACCOUNTS TO CHECK
 theUserName = ['realDonaldTrump',
@@ -57,9 +57,10 @@ api = tweepy.API(auth)
 def writetweet(msgsub, msgtext):
     """ Connect to the PostgreSQL database server """
     conn = None
-    sql = """INSERT INTO tweet_log(tweet,tweet_date,handle )
-        VALUES(%(tweet)s, %(tweet_date)s, %(handle)s) RETURNING tweet_id;"""
-    tweet_id = None
+
+    sql = """INSERT INTO tweetlog(id,tweet,tweet_date,handle )
+        VALUES(%(id)s,%(tweet)s, %(tweet_date)s, %(handle)s);"""
+    id = None
     try:
         print "connecting to db"
         # read database configuration
@@ -68,12 +69,14 @@ def writetweet(msgsub, msgtext):
         conn = psycopg2.connect(**params)
         # create a new cursor
         cur = conn.cursor()
-
-        tweetdict = ({"tweet": msgtext.encode('utf8'), "tweet_date": datetime.datetime.now(), "handle": msgsub.encode('utf8')})
+        cur.execute("SELECT setval('tweetlog_id_seq', (SELECT max(id) from tweetlog));")
+        cur.execute("SELECT nextval('tweetlog_id_seq')")
+        tweetid = cur.fetchone()[0]
+        print "value of id is " + str(tweetid)
+        tweetdict = ({"id": tweetid, "tweet": msgtext.encode('utf8'),
+                      "tweet_date": datetime.datetime.now(), "handle": msgsub.encode('utf8')})
         # execute the INSERT statement
         cur.execute(sql, tweetdict)
-        # get the generated id back
-        tweet_id = cur.fetchone()[0]
         # commit the changes to the database
         conn.commit()
         # close communication with the database
@@ -83,8 +86,6 @@ def writetweet(msgsub, msgtext):
     finally:
         if conn is not None:
             conn.close()
-
-    return tweet_id
 
 
 # print tweet
